@@ -453,6 +453,11 @@ img, svg { display: block; max-width: 100%; }
 }
 .contact-email:hover { color: var(--accent-strong); border-color: var(--accent-strong); }
 
+.contact-compact .contact-form { max-width: 400px; padding: 1.1rem; }
+.contact-compact .contact-intro h2 { font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem); }
+.contact-compact .field { margin-bottom: 0.9rem; }
+.contact-compact .form-submit { padding: 0.7em 1.4em; }
+
 .contact-form {
   max-width: 480px;
   margin-left: auto;
