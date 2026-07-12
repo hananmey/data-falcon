@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Data Falcon</title>
+<meta name="description" content="Get in touch with Data Falcon, an independent data advisory and implementation practice.">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGrad" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="index.html#approach">Approach</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="wrap contact-grid">
+      <div class="contact-intro reveal">
+        <p class="eyebrow">Contact</p>
+        <h2>Let's talk about your data.</h2>
+        <p>Reach us directly, or send a note through the form and we'll reply within one business day.</p>
+        <a class="contact-email" href="mailto:hello@data-falcon.com">hello@data-falcon.com</a>
+      </div>
+
+      <form class="contact-form reveal" id="contact-form" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="message">What are you trying to solve?</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Send message</button>
+        <p class="form-note" id="form-note">This opens your email client with the message pre-filled. Nothing is sent automatically.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a class="brand brand-footer" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGradFooter)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGradFooter" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html#approach">Approach</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="footer-social" aria-label="Social links">
+      <a href="#" aria-label="Data Falcon on LinkedIn">LinkedIn</a>
+      <a href="#" aria-label="Data Falcon on X">X</a>
+    </div>
+  </div>
+  <div class="wrap footer-meta">
+    <span>© <span id="year">2026</span> Data Falcon. All rights reserved.</span>
+    <span class="footer-coord">EST. 2026 · IND. NO. 04</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
