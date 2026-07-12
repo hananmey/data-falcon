@@ -87,3 +87,5 @@ assets/img/favicon.svg   brand mark (also inlined in index.html header/footer)
 - Respect `prefers-reduced-motion` for any new animation (existing rules are
   in the "Scroll reveal" and hero animation blocks of `style.css`).
 - Avoid interrupting work with clarifying questions. If something is ambiguous, proceed with your best judgment and list any assumptions/open questions at the   end of your response instead of blocking on them.
+
+
