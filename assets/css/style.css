@@ -371,14 +371,14 @@ img, svg { display: block; max-width: 100%; }
 .founders-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1.5rem;
 }
 
 .founder-card {
   flex: 1 1 300px;
   max-width: 380px;
-  text-align: center;
+  text-align: left;
   background: var(--bg-inset);
   border: 1px solid var(--line-soft);
   border-radius: var(--radius);
@@ -390,7 +390,7 @@ img, svg { display: block; max-width: 100%; }
   justify-content: center;
   width: 64px;
   height: 64px;
-  margin: 0 auto 1rem;
+  margin: 0 0 1rem;
   border-radius: 50%;
   border: 1px solid var(--accent-line);
   background: var(--accent-soft);
@@ -439,13 +439,13 @@ img, svg { display: block; max-width: 100%; }
   grid-template-columns: 1fr 1.2fr;
   gap: clamp(2.5rem, 2rem + 3vw, 5rem);
 }
-.contact-intro h2 { font-size: var(--fs-h2); }
-.contact-intro p { color: var(--ink-muted); }
+.contact-intro h2 { font-size: clamp(1.4rem, 1.15rem + 1.2vw, 2rem); }
+.contact-intro p { color: var(--ink-muted); font-size: 0.92rem; }
 .contact-email {
   display: inline-block;
   margin-top: 0.75rem;
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.88rem;
   color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid var(--accent-line);
@@ -454,9 +454,11 @@ img, svg { display: block; max-width: 100%; }
 .contact-email:hover { color: var(--accent-strong); border-color: var(--accent-strong); }
 
 .contact-form {
+  max-width: 480px;
+  margin-left: auto;
   background: var(--bg-inset);
   border: 1px solid var(--line-soft);
-  padding: clamp(1.5rem, 1.25rem + 1vw, 2.25rem);
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.85rem);
   border-radius: var(--radius);
 }
 .field { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.5em; }
