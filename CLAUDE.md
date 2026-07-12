@@ -1,6 +1,8 @@
 
 # Data Falcon — data-falcon.com
 
+
+
 Static marketing site for Data Falcon, an independent data advisory and
 implementation practice. No build step, no framework, no backend — plain
 HTML/CSS/JS deployable to any static host (Netlify, Vercel, S3+CloudFront,
@@ -84,3 +86,4 @@ assets/img/favicon.svg   brand mark (also inlined in index.html header/footer)
   sections should reuse existing tokens rather than introducing new colors.
 - Respect `prefers-reduced-motion` for any new animation (existing rules are
   in the "Scroll reveal" and hero animation blocks of `style.css`).
+- Avoid interrupting work with clarifying questions. If something is ambiguous, proceed with your best judgment and list any assumptions/open questions at the   end of your response instead of blocking on them.
