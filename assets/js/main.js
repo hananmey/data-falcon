@@ -1,6 +1,7 @@
 (function () {
   "use strict";
 
+  
   /* Mobile nav toggle */
   var toggle = document.getElementById("nav-toggle");
   var nav = document.getElementById("site-nav");
