@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs — Data Falcon</title>
+<meta name="description" content="Open roles at Data Falcon, an independent data advisory and implementation practice.">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGrad" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="index.html#approach">Approach</a>
+      <a href="about.html">Team</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- JOBS -->
+  <section class="section" id="jobs">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Jobs</p>
+      </div>
+
+      <div class="job-listing reveal">
+        <h3 class="job-title">Junior Python Developer</h3>
+        <p class="job-intro">Data Falcon is looking for a Junior Python Developer to join our team, working on data platforms and AI-powered services for our clients.</p>
+
+        <h4 class="job-subhead">Requirements</h4>
+        <ul class="job-list">
+          <li>Bachelor's degree in Computer Science or a related field</li>
+          <li>Proficiency in Python</li>
+          <li>Knowledge in SQL</li>
+          <li>Familiarity with Kubernetes</li>
+          <li>Eager to build AI-powered services</li>
+          <li>Understanding of RAG concepts</li>
+        </ul>
+
+        <h4 class="job-subhead">Nice to Have</h4>
+        <ul class="job-list">
+          <li>Exposure to or willingness to learn LangChain, Agno, or MCP</li>
+          <li>Familiarity with GraphRAG</li>
+        </ul>
+
+        <h4 class="job-subhead">Apply</h4>
+        <form class="contact-form reveal" id="application-form" action="https://formspree.io/f/xzdnbvpz" method="POST" enctype="multipart/form-data" novalidate>
+          <div class="field">
+            <label for="app-name">Name<span class="req" aria-hidden="true">*</span><span class="field-error" id="app-name-error"></span></label>
+            <input type="text" id="app-name" name="name" autocomplete="given-name" required>
+          </div>
+          <div class="field">
+            <label for="app-family-name">Last Name<span class="req" aria-hidden="true">*</span><span class="field-error" id="app-family-name-error"></span></label>
+            <input type="text" id="app-family-name" name="familyName" autocomplete="family-name" required>
+          </div>
+          <div class="field">
+            <label for="app-email">Email<span class="req" aria-hidden="true">*</span><span class="field-error" id="app-email-error"></span></label>
+            <input type="email" id="app-email" name="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="app-linkedin">LinkedIn Profile<span class="req" aria-hidden="true">*</span><span class="field-error" id="app-linkedin-error"></span></label>
+            <input type="text" id="app-linkedin" name="linkedin" autocomplete="url" placeholder="www.linkedin.com/in/your-name" pattern="(https?:\/\/)?www\.linkedin\.com\/in\/[A-Za-z0-9\-_%]+\/?" title="Enter a valid LinkedIn profile URL, e.g. www.linkedin.com/in/your-name" required>
+          </div>
+          <div class="field">
+            <label for="app-resume">Resume (.docx only)<span class="req" aria-hidden="true">*</span><span class="field-error" id="app-resume-error"></span></label>
+            <input type="file" id="app-resume" name="resume" accept=".docx" required>
+          </div>
+          <div class="field">
+            <label for="app-cover">Cover Text</label>
+            <textarea id="app-cover" name="cover" rows="5"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit">Send application</button>
+          <p class="form-note" id="application-form-note">Your application, including your resume, is sent directly — no email client needed.</p>
+          <p class="form-success" id="application-success" hidden>Thank you! Your application has been sent.</p>
+          <p class="form-error" id="application-error" hidden>Something went wrong sending your application. Please try again, or email us directly.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a class="brand brand-footer" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGradFooter)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGradFooter" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html#approach">Approach</a>
+      <a href="about.html">Team</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <div class="wrap footer-meta">
+    <span>© <span id="year">2026</span> Data Falcon. All rights reserved.</span>
+    <span class="footer-coord">EST. 2026 · IND. NO. 04</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

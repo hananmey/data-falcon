@@ -30,6 +30,7 @@
     <nav class="site-nav" id="site-nav" aria-label="Primary">
       <a href="index.html#approach">Approach</a>
       <a href="about.html">Team</a>
+      <a href="jobs.html">Jobs</a>
       <a href="contact.html">Contact</a>
     </nav>
 
@@ -55,11 +56,11 @@
 
       <form class="contact-form reveal" id="contact-form" novalidate>
         <div class="field">
-          <label for="name">Name</label>
+          <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
           <input type="text" id="name" name="name" autocomplete="name" required>
         </div>
         <div class="field">
-          <label for="email">Email</label>
+          <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
           <input type="email" id="email" name="email" autocomplete="email" required>
         </div>
         <div class="field">
@@ -68,7 +69,7 @@
         </div>
         <div class="field">
           <label for="message">What are you trying to solve?</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
+          <textarea id="message" name="message" rows="5"></textarea>
         </div>
         <button type="submit" class="btn btn-primary form-submit">Send message</button>
         <p class="form-note" id="form-note">This opens your email client with the message pre-filled. Nothing is sent automatically.</p>
@@ -96,13 +97,9 @@
     <nav class="footer-nav" aria-label="Footer">
       <a href="index.html#approach">Approach</a>
       <a href="about.html">Team</a>
+      <a href="jobs.html">Jobs</a>
       <a href="contact.html">Contact</a>
     </nav>
-
-    <div class="footer-social" aria-label="Social links">
-      <a href="#" aria-label="Data Falcon on LinkedIn">LinkedIn</a>
-      <a href="#" aria-label="Data Falcon on X">X</a>
-    </div>
   </div>
   <div class="wrap footer-meta">
     <span>© <span id="year">2026</span> Data Falcon. All rights reserved.</span>
