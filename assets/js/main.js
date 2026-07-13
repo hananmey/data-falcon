@@ -39,32 +39,48 @@
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* Contact form -> mailto fallback (no backend yet) */
+  /* Contact form -> Formspree (silent submit, no email client) */
   var form = document.getElementById("contact-form");
   if (form) {
+    var formSuccess = document.getElementById("form-success");
+    var formError = document.getElementById("form-error");
+    var formSubmitBtn = form.querySelector(".form-submit");
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      var name = form.name.value.trim();
-      var email = form.email.value.trim();
-      var company = form.company.value.trim();
-      var message = form.message.value.trim();
+      if (!form.checkValidity()) {
+        formSuccess.hidden = true;
+        form.reportValidity();
+        return;
+      }
 
-      var subject = "New inquiry from " + (name || "website");
-      var bodyLines = [
-        "Name: " + name,
-        "Email: " + email,
-        "Company: " + (company || "-"),
-        "",
-        message
-      ];
+      formSuccess.hidden = true;
+      formError.hidden = true;
+      formSubmitBtn.disabled = true;
+      formSubmitBtn.textContent = "Sending…";
 
-      var mailto =
-        "mailto:hello@data-falcon.com" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(bodyLines.join("\n"));
-
-      window.location.href = mailto;
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json" }
+      })
+        .then(function (response) {
+          if (response.ok) {
+            form.reset();
+            formSuccess.hidden = false;
+            window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+          } else {
+            formError.hidden = false;
+          }
+        })
+        .catch(function () {
+          formError.hidden = false;
+        })
+        .finally(function () {
+          formSubmitBtn.disabled = false;
+          formSubmitBtn.textContent = "Send message";
+        });
     });
   }
 
