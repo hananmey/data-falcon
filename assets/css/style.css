@@ -494,6 +494,7 @@ img, svg { display: block; max-width: 100%; }
 .field-error { color: #E5484D; font-size: 0.78rem; margin-left: 0.6em; font-weight: 400; }
 .field.has-error input, .field.has-error textarea { border-color: #E5484D; }
 .form-success { color: var(--accent-strong); font-size: 1.1rem; font-weight: 650; margin: 0.9em 0 0; }
+#application-response-note { color: var(--accent-strong); font-size: 0.95rem; margin: 0.4em 0 0; }
 .form-error { color: #E5484D; font-size: var(--fs-small); margin: 0.9em 0 0; }
 .field input, .field textarea {
   background: var(--bg);

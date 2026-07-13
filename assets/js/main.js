@@ -43,6 +43,7 @@
   var form = document.getElementById("contact-form");
   if (form) {
     var formSuccess = document.getElementById("form-success");
+    var formNote = document.getElementById("form-note");
     var formError = document.getElementById("form-error");
     var formSubmitBtn = form.querySelector(".form-submit");
 
@@ -68,6 +69,7 @@
         .then(function (response) {
           if (response.ok) {
             form.reset();
+            formNote.hidden = true;
             formSuccess.hidden = false;
             window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
           } else {
@@ -108,6 +110,7 @@
       }
     ];
     var appSuccess = document.getElementById("application-success");
+    var appResponseNote = document.getElementById("application-response-note");
     var appError = document.getElementById("application-error");
     var appSubmitBtn = appForm.querySelector(".form-submit");
 
@@ -133,12 +136,14 @@
 
       if (firstInvalid) {
         appSuccess.hidden = true;
+        appResponseNote.hidden = true;
         appError.hidden = true;
         firstInvalid.focus();
         return;
       }
 
       appSuccess.hidden = true;
+      appResponseNote.hidden = true;
       appError.hidden = true;
       appSubmitBtn.disabled = true;
       appSubmitBtn.textContent = "Sending…";
@@ -152,6 +157,7 @@
           if (response.ok) {
             appForm.reset();
             appSuccess.hidden = false;
+            appResponseNote.hidden = false;
             window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
           } else {
             appError.hidden = false;
