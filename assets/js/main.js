@@ -1,7 +1,22 @@
 (function () {
   "use strict";
 
-  
+  /* Prevent the browser (esp. mobile Chrome bfcache) from reopening the
+     page at a stale scroll position — e.g. after a form submit scrolled
+     to the bottom. Anchor links (e.g. index.html#approach) still work
+     since we only force-reset when there's no hash. */
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted && !window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  });
+
   /* Mobile nav toggle */
   var toggle = document.getElementById("nav-toggle");
   var nav = document.getElementById("site-nav");
