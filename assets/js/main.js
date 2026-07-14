@@ -122,6 +122,13 @@
           }
           return null;
         }
+      },
+      {
+        input: appForm.termsAccepted,
+        label: "Terms & Conditions",
+        validate: function (input) {
+          return input.checked ? null : "You must agree to the Terms & Conditions";
+        }
       }
     ];
     var appSuccess = document.getElementById("application-success");

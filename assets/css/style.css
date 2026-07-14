@@ -3,6 +3,11 @@
    panel). No light theme: the dark ground is the identity, not a mode.
    ========================================================================== */
 
+
+
+
+
+   
 :root {
   /* -- palette: dusk navy ground, falcon-eye amber accent, slate structural -- */
   --bg: #0B0F16;
@@ -513,6 +518,50 @@ img, svg { display: block; max-width: 100%; }
 }
 .form-submit { width: 100%; margin-top: 0.4rem; }
 .form-note { font-size: var(--fs-small); color: var(--ink-faint); margin: 0.9em 0 0; }
+
+/* Job application terms & conditions */
+.terms-details {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 1.2rem;
+  font-size: 0.82rem;
+}
+.terms-details summary {
+  cursor: pointer;
+  padding: 0.75em 0.9em;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.terms-details summary:hover { color: var(--ink); }
+.terms-body {
+  padding: 0 0.9em 0.9em;
+  color: var(--ink-faint);
+  max-height: 16rem;
+  overflow-y: auto;
+}
+.terms-body p { margin: 0 0 0.75em; }
+.terms-body strong { color: var(--ink-muted); font-weight: 600; }
+.terms-body a { color: var(--accent); }
+.terms-list { margin: 0; padding-left: 1.2em; }
+.terms-list li { margin-bottom: 0.6em; }
+
+.field-check label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  cursor: pointer;
+}
+.field-check input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  margin: 0.1em 0 0;
+  flex-shrink: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.field-check.has-error label { color: #E5484D; }
 
 /* ==========================================================================
    Footer
