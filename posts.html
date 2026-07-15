@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — Data Falcon</title>
-<meta name="description" content="Get in touch with Data Falcon, an independent data advisory and implementation practice.">
+<title>Posts — Data Falcon</title>
+<meta name="description" content="Posts from Data Falcon on data architecture, analytics engines, and building platforms that last.">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -45,38 +45,25 @@
 
 <main id="main">
 
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="wrap contact-grid">
-      <div class="contact-intro reveal">
-        <p class="eyebrow">Contact</p>
-        <h2>Let's talk about your data.</h2>
-        <p>Reach us directly, or send a note through the form and we'll reply within one business day.</p>
-        <a class="contact-email" href="mailto:hello@data-falcon.com">hello@data-falcon.com</a>
+  <!-- POSTS -->
+  <section class="section" id="posts">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Posts</p>
       </div>
 
-      <form class="contact-form reveal" id="contact-form" action="https://formspree.io/f/mkodnzrr" method="POST" novalidate>
-        <div class="field">
-          <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="name" name="name" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
-          <input type="email" id="email" name="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="company">Company</label>
-          <input type="text" id="company" name="company" autocomplete="organization">
-        </div>
-        <div class="field">
-          <label for="message">What are you trying to solve?</label>
-          <textarea id="message" name="message" rows="5"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary form-submit">Send message</button>
-        <p class="form-note" id="form-note">Your message is sent directly — no email client needed.</p>
-        <p class="form-success" id="form-success" hidden>Thank you! Your message has been sent.</p>
-        <p class="form-error" id="form-error" hidden>Something went wrong sending your message. Please try again, or email us directly.</p>
-      </form>
+      <div class="posts-list">
+        <a class="post-card reveal" href="posts/iceberg-clickhouse.html">
+          <p class="post-card-meta">15 JUL 2026 · ARCHITECTURE</p>
+          <div class="post-card-thumbs">
+            <img src="assets/img/posts/ice-click/click.jpeg" alt="ClickHouse logo">
+            <img src="assets/img/posts/ice-click/ice.jpeg" alt="Apache Iceberg logo">
+          </div>
+          <h3>ClickHouse vs. Apache Iceberg: Choosing the Right Engine for Your Analytics</h3>
+          <p class="post-card-excerpt">Iceberg has real momentum and a genuinely important place in the modern data stack. But many teams reaching for a lakehouse would be dramatically better served by ClickHouse. An honest breakdown of both — where each one shines, and why.</p>
+          <span class="post-card-more">Read post →</span>
+        </a>
+      </div>
     </div>
   </section>
 

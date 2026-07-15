@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClickHouse vs. Apache Iceberg — Data Falcon</title>
+<meta name="description" content="An honest breakdown of ClickHouse and Apache Iceberg — where each one shines, and why ClickHouse is our default recommendation for most analytics workloads.">
+<link rel="icon" type="image/svg+xml" href="../assets/img/favicon.svg">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="../index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGrad" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="../index.html#approach">Approach</a>
+      <a href="../about.html">Team</a>
+      <a href="../posts.html">Posts</a>
+      <a href="../jobs.html">Jobs</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <article class="section post-article">
+    <div class="wrap">
+      <div class="post-head reveal">
+        <p class="post-meta"><a href="../posts.html">← Posts</a> · 15 JUL 2026 · ARCHITECTURE</p>
+        <h1>ClickHouse vs. Apache Iceberg: Choosing the Right Engine for Your Analytics</h1>
+        <div class="post-hero">
+          <img src="../assets/img/posts/ice-click/click.jpeg" alt="ClickHouse logo">
+          <span class="post-hero-vs">VS</span>
+          <img src="../assets/img/posts/ice-click/ice.jpeg" alt="Apache Iceberg logo">
+        </div>
+      </div>
+
+      <div class="post-body">
+        <p>At Data Falcon, one of the most common questions we hear from clients modernizing their data platforms is some version of: <em>"Everyone's talking about Iceberg and the lakehouse — is that where we should be going?"</em></p>
+
+        <p>It's a fair question. Iceberg has real momentum, real strengths, and a genuinely important place in the modern data stack. But in our experience, many teams reaching for a lakehouse architecture would be better served — dramatically better served — by ClickHouse. Here's an honest breakdown of both, where each one shines, and why ClickHouse is our default recommendation for most analytics workloads.</p>
+
+        <h2>First, a level-set: these aren't the same kind of thing</h2>
+
+        <p>Comparing ClickHouse and Iceberg directly is a little like comparing a race car to a road system. It's worth being precise:</p>
+
+        <p><strong>Apache Iceberg</strong> is a <em>table format</em> — a specification for organizing data files (usually Parquet) on object storage like S3 or GCS, with metadata that enables schema evolution, time travel, and ACID transactions. Iceberg doesn't execute queries. You always pair it with a compute engine: Spark, Trino, Athena, Flink, Dremio, or others.</p>
+
+        <p><strong>ClickHouse</strong> is a <em>database</em> — a complete, self-contained columnar analytics engine. Storage, indexing, query execution, and optimization all live in one tightly integrated system, purpose-built for one thing: answering analytical queries extremely fast.</p>
+
+        <p>That architectural difference — integrated engine versus decoupled format-plus-compute — explains almost everything about where each one wins.</p>
+
+        <h2>Where ClickHouse wins</h2>
+
+        <h3>Raw query speed — and it's not close</h3>
+
+        <p>ClickHouse was engineered from the ground up for interactive analytical queries. Sparse primary indexes, aggressive compression, vectorized execution, materialized views, and specialized data-skipping indexes all work together in one engine. Sub-second responses over billions of rows aren't a benchmark stunt — they're the everyday experience.</p>
+
+        <p>An Iceberg stack, by contrast, pays a coordination tax on every query: the engine reads Iceberg metadata, plans against file manifests, fetches Parquet files from object storage, and only then starts computing. Engines like Trino and the latest Spark releases have made this impressively fast — but "impressively fast for a lakehouse" and "ClickHouse fast" remain different categories, especially for the interactive, high-concurrency dashboards and user-facing analytics where latency is felt directly.</p>
+
+        <h3>Real-time data, natively</h3>
+
+        <p>ClickHouse ingests streaming data and makes it queryable within seconds. Connectivity to streaming sources is built in, not bolted on: the <strong>Kafka table engine</strong> consumes topics directly from within ClickHouse itself, and for teams who prefer the connector ecosystem, the official <strong>ClickHouse Kafka Connect sink</strong> streams data in from Kafka Connect with exactly-once semantics. Either way, no separate ingestion service to build.</p>
+
+        <p>Where it gets genuinely powerful is what happens after ingestion. ClickHouse's <strong>materialized views</strong> act as continuous, incremental transformation pipelines inside the database: define a target table, attach a materialized view to your raw ingestion table, and every incoming batch is automatically transformed, aggregated, and routed into the new table as it arrives — no orchestrator, no scheduled jobs, no external streaming framework. Need the same raw stream feeding an hourly rollup, a per-customer summary, and a deduplicated clean table simultaneously? That's three materialized views on one source table.</p>
+
+        <p>Purpose-built <strong>aggregating table engines</strong> complete the picture: <code>SummingMergeTree</code> and <code>AggregatingMergeTree</code> maintain pre-computed aggregates that fold new data into existing totals automatically during background merges. The result is a pattern our clients use constantly — raw events land once, and a cascade of always-current, query-ready aggregate tables maintains itself, turning what would be an Airflow-DAG-and-Spark-job pipeline elsewhere into a few <code>CREATE MATERIALIZED VIEW</code> statements.</p>
+
+        <p>If your product needs live dashboards, operational analytics, or user-facing metrics that reflect what happened moments ago, ClickHouse handles all of this out of the box.</p>
+
+        <p>Iceberg is fundamentally batch-oriented. Streaming writes are possible (via Flink or Spark Structured Streaming), but they produce small files that require ongoing compaction jobs, and query freshness is bounded by snapshot commit intervals. Real-time on Iceberg is achievable — but it's something you build and operate, not something you get.</p>
+
+        <h3>Operational simplicity</h3>
+
+        <p>A ClickHouse deployment is one system to run, monitor, and tune. An Iceberg-based platform is a distributed systems project: a catalog service (Glue, Nessie, or a Hive metastore), a compute engine (or several), object storage, compaction and maintenance jobs, and orchestration tying it all together. Each component is another thing to secure, upgrade, monitor, and debug.</p>
+
+        <p>For teams without a dedicated platform group, that difference isn't cosmetic — it's the difference between a data stack that quietly works and one that becomes a standing engineering commitment.</p>
+
+        <h3>Cost efficiency at query time — and at rest</h3>
+
+        <p>ClickHouse's compression is exceptional — on real-world data, columnar compression combined with specialized codecs routinely shrinks raw data size by more than 90%. A 10 TB raw dataset commonly lands under 1 TB on disk. And ClickHouse doesn't force that data onto expensive local disks: it natively supports tiered storage on cloud object storage (S3, GCS), letting you keep hot data on fast local NVMe and transparently move older partitions to cheap object storage — while still querying everything through the same tables, with no separate archive system to manage.</p>
+
+        <p>Combined with its execution efficiency — the same workload typically needs far less compute than a Spark or Trino cluster scanning Parquet — the total cost of a ClickHouse deployment is usually substantially lower than an equivalent lakehouse setup, on both the storage and the compute side of the bill.</p>
+
+        <p>Deployment flexibility keeps the pricing honest, too. ClickHouse runs on <strong>your own Kubernetes cluster</strong> — self-managed with the open-source distribution, or operator-managed with Altinity — or as a fully managed <strong>cloud service</strong> (ClickHouse Cloud, Altinity.Cloud). In our experience the cost difference between well-sized self-hosted and managed deployments is modest, so the choice comes down to operational preference rather than budget. What <em>is</em> a big difference: either path typically lands dramatically cheaper than the systems teams often reach for by default — Snowflake for the analytics, Elasticsearch for the search — both of which ClickHouse can frequently replace outright, at a fraction of the monthly bill.</p>
+
+        <p>Don't take our word for the price gap. ClickHouse published a <a href="https://clickhouse.com/blog/cloud-data-warehouses-cost-performance-comparison" target="_blank" rel="noopener">benchmark of the five major cloud data warehouses</a> — Snowflake, Databricks, BigQuery, Redshift, and ClickHouse Cloud — running the same 43-query analytical workload at 1B, 10B, and 100B rows, priced using each vendor's real billing model. At 100B rows, ClickHouse Cloud was the only system that stayed both fast and low-cost, with the next-best configuration landing over 20× worse on cost-performance and some falling into the hundreds-times-worse range. It's a vendor-published benchmark, so read it with that in mind — but the methodology is open and reproducible (CostBench), and the results are consistent with what we see in client migrations.</p>
+
+        <h3>Plays well with Spark — keep your heavy ETL where it belongs</h3>
+
+        <p>Choosing ClickHouse doesn't mean abandoning Spark — the two pair naturally, and it's an architecture we implement often. The official <strong>ClickHouse Spark connector</strong> lets Spark jobs write directly into ClickHouse tables, which means Spark stays in the role it's genuinely best at: heavy transformation on the way in.</p>
+
+        <p>In practice that looks like: Spark reads raw data from wherever it lives (S3, Kafka, operational databases), applies <strong>windowing and complex transformations</strong>, <strong>enriches records in-flight by looking up reference data in other databases</strong> — customer dimensions from MySQL, device metadata from MongoDB, whatever the pipeline needs — and lands the cleaned, joined, enriched result straight into ClickHouse. From there, ClickHouse does what <em>it's</em> best at: serving that data to users and dashboards at interactive speed.</p>
+
+        <p>This division of labor — Spark for compute-heavy load-time processing, ClickHouse for query-time performance — gives teams the full power of both without forcing either into a role it wasn't designed for. And notably, if you already have Spark pipelines, adapting them takes the same effort either way: pointing an existing Spark job at ClickHouse (via the connector) is no more work than pointing it at Iceberg tables. Your Spark investment carries over identically — the only real difference is what your users query at the end of the pipeline.</p>
+
+        <p><strong>And for many pipelines, you don't need Spark at all.</strong> ClickHouse's own ingestion machinery covers a surprising share of everyday ETL. External <strong>dictionaries</strong> perform in-flight lookups against other data sources — MySQL, PostgreSQL, and others — with the reference data held in memory and refreshed automatically on an adjustable interval, so enriching incoming rows via a simple <code>dictGet</code> call is both fast and always reasonably fresh, no external job required. Table functions and engines (<code>mysql()</code>, <code>postgresql()</code>, and more) let ClickHouse pull directly from source systems in a plain <code>INSERT ... SELECT</code>, applying <strong>filtering, aggregation, and transformations at load time</strong> in the same statement. <strong>Materialized columns</strong> derive new fields automatically from loaded data — parsing, casting, extracting — the moment rows arrive, and materialized views (covered above) handle continuous aggregation without any orchestrator. Before reaching for a Spark cluster, it's worth asking whether the pipeline is really more than an <code>INSERT ... SELECT</code> with a dictionary lookup — in our client work, a good portion of "we need Spark for this" turns out to be a few lines of ClickHouse SQL.</p>
+
+        <h3>Beyond classic analytics: full-text, vector search, and AI-native access</h3>
+
+        <p>ClickHouse has quietly grown well past "fast aggregations." Three capabilities in particular matter for modern workloads:</p>
+
+        <p><strong>Full-text search with inverted indexes.</strong> ClickHouse supports inverted (text) indexes on string columns, enabling fast token-based search over logs, documents, and event payloads — the kind of workload teams traditionally bolt on Elasticsearch for. For many log-search and text-filtering use cases, that's one less system to run: the same table serving your aggregations can also answer <code>hasToken</code>-style text queries efficiently.</p>
+
+        <p><strong>Vector search, as plain SQL functions.</strong> Similarity search over embeddings — the backbone of semantic search and RAG applications — works in ClickHouse through simple distance functions like <code>cosineDistance</code> and <code>L2Distance</code>, accelerated by approximate nearest-neighbor (ANN) vector indexes for scale. There's no separate vector database to deploy: store your embeddings in a column next to your business data, and combine semantic similarity with ordinary SQL filters in a single query — "find the 10 most similar documents, but only from this customer, in the last 30 days" is one statement, not a two-system join.</p>
+
+        <p><strong>AI-native access via MCP.</strong> ClickHouse has an official MCP (Model Context Protocol) server, which means AI agents and LLM-based applications can discover your schemas and query your data through a standardized, controllable interface — no bespoke integration code per framework. As teams build agentic analytics ("ask questions in plain language, get answers from live data"), ClickHouse plugs directly into that ecosystem. It's a pattern we build for clients today: LLM agent → MCP → ClickHouse, with the database's speed making conversational analytics feel genuinely interactive.</p>
+
+        <p>An Iceberg stack can reach some of these capabilities too — but each one means integrating and operating yet another engine on top of the format. In ClickHouse, they're features of the database you already have.</p>
+
+        <h3>A concrete example: building RAG on Iceberg + ClickHouse</h3>
+
+        <p>Retrieval-Augmented Generation is where these two technologies stop competing and start composing — and it's a pattern we're implementing more and more for clients building AI features on top of their data.</p>
+
+        <p>The architecture splits cleanly along each system's strengths:</p>
+
+        <p><strong>Iceberg as the corpus layer.</strong> Your raw document corpus — PDFs, transcripts, tickets, contracts, crawled content — lands in object storage under Iceberg. This is exactly what Iceberg is for: cheap, durable, versioned storage of large volumes of source material, with schema evolution as your document metadata grows and time travel when you need to reproduce exactly what the corpus looked like when an embedding run happened. Reprocessing jobs (re-chunking, re-embedding with a newer model) run as Spark batch jobs over Iceberg — heavy, occasional, throughput-oriented work.</p>
+
+        <p><strong>ClickHouse as the retrieval layer.</strong> The chunked text and its embeddings are written into ClickHouse — via the Spark connector, straight out of the embedding pipeline. At query time, this is where RAG lives or dies: a user asks a question, the application embeds it, and ClickHouse answers the similarity search with <code>cosineDistance</code> over an ANN index — combined, critically, with ordinary SQL filters in the same statement. Tenant isolation, date ranges, document-type filters, access control — all standard <code>WHERE</code> clauses alongside the vector search, in one query, at interactive latency.</p>
+
+        <p>The division matters because RAG retrieval is a <strong>latency-critical, high-concurrency, filtered-search</strong> problem — squarely ClickHouse territory — while corpus management is a <strong>cheap-storage, batch-reprocessing, versioning</strong> problem — squarely Iceberg territory. Teams that try to serve retrieval directly off the lakehouse hit the coordination tax on every single user question; teams that keep their whole corpus in the serving database pay hot-storage prices for cold documents. Splitting it this way costs each system nothing it isn't built to give.</p>
+
+        <p>And with ClickHouse's MCP server in front of the retrieval layer, the same setup extends naturally from classic RAG into agentic patterns — an LLM agent that doesn't just retrieve chunks, but explores the data with real queries.</p>
+
+        <h3>A rapidly closing gap: ClickHouse can read Iceberg too</h3>
+
+        <p>This one surprises people: ClickHouse ships with native Iceberg table functions and integrations. You can query Iceberg tables sitting in S3 directly from ClickHouse — which means adopting ClickHouse doesn't wall you off from lakehouse data. Increasingly, the pragmatic architecture is both: Iceberg as the cold, durable archive; ClickHouse as the hot, fast serving layer.</p>
+
+        <h2>Where Iceberg wins — because it genuinely does, sometimes</h2>
+
+        <p>An honest recommendation requires an honest accounting of the other side.</p>
+
+        <p><strong>Truly massive, cold data at minimal storage cost.</strong> If you're retaining petabytes for compliance or occasional deep analysis, object storage with Iceberg's organization is about as cheap as durable data gets. Keeping rarely-queried history in a ClickHouse cluster means paying for that cluster's resources to hold data nobody touches.</p>
+
+        <p><strong>Engine independence.</strong> Iceberg's core promise is that your data isn't captive to any single engine. Spark for ML pipelines, Trino for ad-hoc SQL, Athena for occasional lookups — all reading the same tables. If multi-engine access across a large organization is a hard requirement, that's Iceberg's home turf.</p>
+
+        <p><strong>Heavy write-side flexibility.</strong> Iceberg's ACID semantics, schema evolution, partition evolution, and time travel are more mature for complex, multi-writer batch scenarios — slowly changing dimensions, regulatory restatements, large-scale backfills with rollback safety.</p>
+
+        <p><strong>Existing Spark-centric teams.</strong> If your organization already runs everything through Spark and your workloads are batch ETL rather than interactive analytics, Iceberg slots into that world naturally.</p>
+
+        <h2>So which fits what?</h2>
+
+        <div class="post-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Your situation</th>
+                <th>Our recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Interactive dashboards, sub-second queries</td><td><strong>ClickHouse</strong></td></tr>
+              <tr><td>User-facing analytics inside your product</td><td><strong>ClickHouse</strong></td></tr>
+              <tr><td>Real-time / streaming analytics</td><td><strong>ClickHouse</strong></td></tr>
+              <tr><td>High query concurrency (many users, many queries)</td><td><strong>ClickHouse</strong></td></tr>
+              <tr><td>Small team, no dedicated platform engineers</td><td><strong>ClickHouse</strong></td></tr>
+              <tr><td>Petabyte-scale cold archive, rarely queried</td><td>Iceberg</td></tr>
+              <tr><td>Hard requirement for multi-engine access</td><td>Iceberg</td></tr>
+              <tr><td>Batch-ETL-centric, Spark-native organization</td><td>Iceberg</td></tr>
+              <tr><td>Both hot serving <em>and</em> cheap deep archive</td><td><strong>ClickHouse + Iceberg together</strong></td></tr>
+              <tr><td>RAG / semantic search over a large document corpus</td><td><strong>ClickHouse (retrieval) + Iceberg (corpus)</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Our take</h2>
+
+        <p>The lakehouse pattern earned its popularity solving real problems — vendor lock-in, storage costs at extreme scale, multi-engine sprawl in large enterprises. If those are your problems, Iceberg is a strong answer.</p>
+
+        <p>But most teams we work with have a different problem: <strong>they need fast answers from their data, reliably, without hiring a platform team to get there.</strong> For that — for the dashboards your executives refresh every morning, the analytics your customers see in your product, the operational metrics your engineers watch in real time — ClickHouse delivers more speed, with less machinery, at lower cost.</p>
+
+        <p>And because ClickHouse speaks Iceberg natively, choosing it today doesn't close any doors tomorrow. Start fast. Stay flexible.</p>
+
+        <hr>
+
+        <p class="post-footnote"><em>Data Falcon designs and implements high-performance data platforms, with deep specialization in ClickHouse architecture and integration. If you're weighing these choices for your own stack, <a href="../contact.html">get in touch</a> — we're happy to talk through your specific workload, no commitment required.</em></p>
+      </div>
+    </div>
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a class="brand brand-footer" href="../index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGradFooter)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGradFooter" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="../index.html#approach">Approach</a>
+      <a href="../about.html">Team</a>
+      <a href="../posts.html">Posts</a>
+      <a href="../jobs.html">Jobs</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+  </div>
+  <div class="wrap footer-meta">
+    <span>© <span id="year">2026</span> Data Falcon. All rights reserved.</span>
+    <span class="footer-coord">EST. 2026 · IND. NO. 04</span>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
