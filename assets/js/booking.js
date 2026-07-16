@@ -216,7 +216,7 @@
           successEl.hidden = false;
           successEl.scrollIntoView({ behavior: "smooth", block: "center" });
         } else if (res.status === 409) {
-          errorEl.textContent = "That time was just taken — please pick another slot.";
+          errorEl.textContent = res.data.detail || "That time was just taken — please pick another slot.";
           errorEl.hidden = false;
           clearSelection();
           loadSlots(selectedDate);
