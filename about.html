@@ -33,6 +33,7 @@
       <a href="posts.html">Posts</a>
       <a href="jobs.html">Jobs</a>
       <a href="contact.html">Contact</a>
+      <a class="nav-book" href="book.html">Free consulting meeting</a>
     </nav>
 
     <div class="header-actions">
@@ -99,11 +100,13 @@
       <div class="contact-intro reveal">
         <p class="eyebrow">Contact</p>
         <h2>Let's talk about your data.</h2>
-        <p>Reach us directly, or send a note through the form and we'll reply within one business day.</p>
-        <a class="contact-email" href="mailto:hello@data-falcon.com">hello@data-falcon.com</a>
+        <p>Book a free consulting meeting, or send a note through the form and we'll reply within one business day.</p>
       </div>
 
-      <form class="contact-form reveal" id="contact-form" action="https://formspree.io/f/mkodnzrr" method="POST" novalidate>
+      <div class="contact-stack reveal">
+        <a class="btn btn-primary btn-book" href="book.html">Book a free consulting meeting</a>
+        <p class="or-divider">Or mail us to contact</p>
+        <form class="contact-form" id="contact-form" action="https://formspree.io/f/mkodnzrr" method="POST" novalidate>
         <div class="field">
           <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
           <input type="text" id="name" name="name" autocomplete="name" required>
@@ -124,7 +127,8 @@
         <p class="form-note" id="form-note">Your message is sent directly — no email client needed.</p>
         <p class="form-success" id="form-success" hidden>Thank you! Your message has been sent.</p>
         <p class="form-error" id="form-error" hidden>Something went wrong sending your message. Please try again, or email us directly.</p>
-      </form>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -151,6 +155,7 @@
       <a href="posts.html">Posts</a>
       <a href="jobs.html">Jobs</a>
       <a href="contact.html">Contact</a>
+      <a class="nav-book" href="book.html">Free consulting meeting</a>
     </nav>
   </div>
   <div class="wrap footer-meta">

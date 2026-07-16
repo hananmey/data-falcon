@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — Data Falcon</title>
-<meta name="description" content="Get in touch with Data Falcon, an independent data advisory and implementation practice.">
+<title>Book a meeting — Data Falcon</title>
+<meta name="description" content="Book a free consulting meeting with Data Falcon — pick a day and time, get a Google Meet invite.">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -46,40 +46,54 @@
 
 <main id="main">
 
-  <!-- CONTACT -->
-  <section class="section" id="contact">
-    <div class="wrap contact-grid">
-      <div class="contact-intro reveal">
-        <p class="eyebrow">Contact</p>
-        <h2>Let's talk about your data.</h2>
-        <p>Book a free consulting meeting, or send a note through the form and we'll reply within one business day.</p>
+  <!-- BOOKING -->
+  <section class="section" id="book">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Book a meeting</p>
+        <h2>Free consulting meeting.</h2>
+        <p>An hour with a founder. Pick a day and time below — you'll
+        receive a calendar invite with a Google Meet link right away.</p>
       </div>
 
-      <div class="contact-stack reveal">
-        <a class="btn btn-primary btn-book" href="book.html">Book a free consulting meeting</a>
-        <p class="or-divider">Or mail us to contact</p>
-        <form class="contact-form" id="contact-form" action="https://formspree.io/f/mkodnzrr" method="POST" novalidate>
-        <div class="field">
-          <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="name" name="name" autocomplete="name" required>
+      <div class="booking-grid">
+        <div class="booking-picker reveal">
+          <p class="picker-label">1 · Choose a day</p>
+          <div class="day-grid" id="day-grid" role="group" aria-label="Choose a day"></div>
+
+          <p class="picker-label picker-label-slots">2 · Choose a time</p>
+          <div class="slot-grid" id="slot-grid" role="group" aria-label="Choose a time"></div>
+          <p class="booking-status" id="booking-status">Select a day to see available times.</p>
+          <p class="form-note">All times are Israel time (Asia/Jerusalem). Meetings are one hour.</p>
         </div>
-        <div class="field">
-          <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
-          <input type="email" id="email" name="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="company">Company</label>
-          <input type="text" id="company" name="company" autocomplete="organization">
-        </div>
-        <div class="field">
-          <label for="message">What are you trying to solve?</label>
-          <textarea id="message" name="message" rows="5"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary form-submit">Send message</button>
-        <p class="form-note" id="form-note">Your message is sent directly — no email client needed.</p>
-        <p class="form-success" id="form-success" hidden>Thank you! Your message has been sent.</p>
-        <p class="form-error" id="form-error" hidden>Something went wrong sending your message. Please try again, or email us directly.</p>
+
+        <form class="contact-form booking-form reveal" id="booking-form" novalidate hidden>
+          <p class="picker-label">3 · Your details</p>
+          <p class="booking-summary" id="booking-summary" hidden></p>
+          <div class="field">
+            <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" maxlength="120" required>
+          </div>
+          <div class="field">
+            <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="notes">What would you like to discuss?</label>
+            <textarea id="notes" name="notes" rows="4" maxlength="1000"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit" id="booking-submit" disabled>Confirm booking</button>
+          <p class="form-note" id="booking-note">Pick a day and time first — then confirm.</p>
+          <p class="form-error" id="booking-error" hidden></p>
         </form>
+
+        <div class="booking-success" id="booking-success" hidden>
+          <p class="eyebrow">Booked</p>
+          <h3>You're on the calendar.</h3>
+          <p id="booking-success-when"></p>
+          <p>The invite and Google Meet link are on their way to your inbox.</p>
+          <a class="btn btn-outline" href="index.html">Back to the site</a>
+        </div>
       </div>
     </div>
   </section>
@@ -117,5 +131,6 @@
 </footer>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/booking.js"></script>
 </body>
 </html>

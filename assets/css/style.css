@@ -191,6 +191,56 @@ img, svg { display: block; max-width: 100%; }
 }
 .site-nav a:hover { color: var(--ink); }
 
+/* booking CTA: amber pill in header/footer nav, glowing primary elsewhere */
+.site-nav .nav-book,
+.footer-nav .nav-book {
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  padding: 0.45em 1em;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.site-nav .nav-book:hover,
+.footer-nav .nav-book:hover {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.btn-book {
+  box-shadow: 0 0 22px rgba(227, 168, 59, 0.25);
+}
+.btn-book:hover { box-shadow: 0 0 30px rgba(227, 168, 59, 0.4); }
+
+/* contact sections: book on top, "or", then the message form */
+.contact-stack { width: 100%; max-width: 480px; }
+/* match the Send message button's width: inset by the form card's padding */
+.contact-stack .btn-book {
+  width: calc(100% - 2 * clamp(1.25rem, 1rem + 0.8vw, 1.85rem));
+  margin: 0 clamp(1.25rem, 1rem + 0.8vw, 1.85rem);
+}
+.contact-stack .contact-form { max-width: none; margin-left: 0; }
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 4.5rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.or-divider::before,
+.or-divider::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+}
+.or-divider::before { background: linear-gradient(90deg, transparent, var(--accent-line)); }
+.or-divider::after { background: linear-gradient(90deg, var(--accent-line), transparent); }
+
 .header-actions { display: flex; align-items: center; gap: 1.25rem; }
 
 .nav-toggle {
@@ -566,8 +616,8 @@ img, svg { display: block; max-width: 100%; }
 /* -- contact -- */
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: clamp(2.5rem, 2rem + 3vw, 5rem);
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);
 }
 .contact-intro h2 { font-size: clamp(1.4rem, 1.15rem + 1.2vw, 2rem); }
 .contact-intro p { color: var(--ink-muted); font-size: 0.92rem; }
@@ -584,6 +634,10 @@ img, svg { display: block; max-width: 100%; }
 .contact-email:hover { color: var(--accent-strong); border-color: var(--accent-strong); }
 
 .contact-compact .contact-form { max-width: 400px; padding: 1.1rem; }
+/* compact variant (home page): keep the book button flush with its narrower form */
+.contact-compact .contact-stack { max-width: 400px; }
+.contact-compact .contact-stack .contact-form { max-width: none; }
+.contact-compact .contact-stack .btn-book { width: calc(100% - 2.2rem); margin: 0 1.1rem; }
 .contact-compact .contact-intro h2 { font-size: clamp(1.2rem, 1rem + 1vw, 1.7rem); }
 .contact-compact .field { margin-bottom: 0.9rem; }
 .contact-compact .form-submit { padding: 0.7em 1.4em; }
@@ -620,6 +674,11 @@ img, svg { display: block; max-width: 100%; }
   border-color: var(--accent);
 }
 .form-submit { width: 100%; margin-top: 0.4rem; }
+.form-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
 .form-note { font-size: var(--fs-small); color: var(--ink-faint); margin: 0.9em 0 0; }
 
 /* Job application terms & conditions */
@@ -666,6 +725,106 @@ img, svg { display: block; max-width: 100%; }
 }
 .field-check.has-error label { color: #E5484D; }
 
+/* -- booking (book.html) -- */
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(2.5rem, 2rem + 3vw, 5rem);
+  align-items: start;
+}
+.picker-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.9rem;
+}
+.picker-label-slots { margin-top: 2rem; }
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+.day-btn, .slot-btn {
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+.day-btn { padding: 0.7em 0.4em; }
+.day-btn:hover, .slot-btn:hover { border-color: var(--accent-line); color: var(--ink); }
+.day-btn.is-selected, .slot-btn.is-selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.day-dow {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.day-btn.is-selected .day-dow { color: var(--accent); }
+.day-date { display: block; font-size: 0.95rem; margin-top: 0.35em; }
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 0.6rem;
+}
+.slot-btn { padding: 0.65em 0.4em; font-size: 0.88rem; }
+.booking-status {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--ink-faint);
+  margin-top: 1rem;
+  min-height: 1.2em;
+}
+.booking-form { margin-left: 0; }
+.booking-summary {
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--accent);
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  padding: 0.75em 0.9em;
+  margin-bottom: 1.2rem;
+}
+.booking-success {
+  background: var(--bg-inset);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 1rem + 0.8vw, 1.85rem);
+  max-width: 480px;
+}
+.booking-success h3 { font-size: var(--fs-h3); margin-bottom: 0.6em; }
+.booking-success p { color: var(--ink-muted); font-size: 0.92rem; margin-bottom: 0.9em; overflow-wrap: anywhere; }
+.booking-success .btn { margin-top: 0.4rem; }
+
+/* book.html only: amber-edged "Back to the site" button on the success card */
+#book .booking-success .btn-outline {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+#book .booking-success .btn-outline:hover {
+  border-color: var(--accent-strong);
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+
+/* book.html only: lift the faint slate text — brighter and larger for readability */
+#book .form-note { color: var(--ink-muted); font-size: 0.95rem; }
+#book .picker-label { color: var(--ink-muted); font-size: 0.92rem; }
+#book .booking-status { color: var(--ink-muted); font-size: 0.95rem; }
+#book .day-dow { color: var(--ink-muted); font-size: 0.78rem; }
+#book .day-btn.is-selected .day-dow { color: var(--accent); }
+
 /* ==========================================================================
    Footer
    ========================================================================== */
@@ -710,6 +869,7 @@ img, svg { display: block; max-width: 100%; }
    ========================================================================== */
 @media (max-width: 920px) {
   .contact-grid { grid-template-columns: 1fr; }
+  .booking-grid { grid-template-columns: 1fr; }
   .flight-stages { grid-template-columns: repeat(2, 1fr); row-gap: 2.5rem; }
   .flight-stages::before { display: none; }
 }
@@ -729,6 +889,13 @@ img, svg { display: block; max-width: 100%; }
   }
   .site-nav.is-open { display: flex; }
   .site-nav a { padding: 0.85rem 0; border-bottom: 1px solid var(--line-soft); }
+  .site-nav .nav-book {
+    align-self: flex-start;
+    margin: 1rem 0 0.5rem;
+    padding: 0.5em 1.1em;
+    border: 1px solid var(--accent-line);
+    border-radius: 999px;
+  }
   .nav-toggle { display: flex; }
 
   .flight-stages { grid-template-columns: 1fr; }
