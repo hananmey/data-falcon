@@ -179,6 +179,7 @@ img, svg { display: block; max-width: 100%; }
 }
 .site-nav {
   display: flex;
+  align-items: center;
   gap: 2rem;
   margin-left: auto;
 }
@@ -191,7 +192,9 @@ img, svg { display: block; max-width: 100%; }
 }
 .site-nav a:hover { color: var(--ink); }
 
-/* booking CTA: amber pill in header/footer nav, glowing primary elsewhere */
+/* booking CTA: amber pill in header/footer nav, glowing primary elsewhere.
+   The header nav is vertically centered so the pill's padding doesn't push
+   its text out of line with the other menu items. */
 .site-nav .nav-book,
 .footer-nav .nav-book {
   color: var(--accent);
@@ -785,6 +788,30 @@ img, svg { display: block; max-width: 100%; }
   margin-top: 1rem;
   min-height: 1.2em;
 }
+.booking-status.is-loading::before {
+  content: "";
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-right: 0.55em;
+  vertical-align: -0.08em;
+  border-radius: 50%;
+  border: 2px solid var(--accent-line);
+  border-top-color: var(--accent);
+  animation: status-spin 0.7s linear infinite;
+}
+@keyframes status-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes status-fade {
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .booking-status.is-loading::before {
+    border-color: var(--accent);
+    animation: status-fade 1.6s ease-in-out infinite;
+  }
+}
 .booking-form { margin-left: 0; }
 .booking-summary {
   font-family: var(--font-mono);
@@ -883,6 +910,7 @@ img, svg { display: block; max-width: 100%; }
     background: var(--bg-elevated);
     border-bottom: 1px solid var(--line-soft);
     flex-direction: column;
+    align-items: stretch;
     gap: 0;
     padding: 0.5rem var(--pad) 1rem;
     display: none;

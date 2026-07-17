@@ -77,8 +77,9 @@
 
   /* -- rendering -- */
 
-  function setStatus(text) {
+  function setStatus(text, loading) {
     statusEl.textContent = text;
+    statusEl.classList.toggle("is-loading", !!loading);
   }
 
   function clearSelection() {
@@ -121,7 +122,7 @@
 
   function loadSlots(dateStr) {
     slotGrid.innerHTML = "";
-    setStatus("Loading times…");
+    setStatus("Loading times…", true);
 
     fetch(API_BASE + "/slots?date=" + dateStr)
       .then(function (r) {
