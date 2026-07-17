@@ -218,8 +218,13 @@
         } else if (res.status === 409) {
           errorEl.textContent = res.data.detail || "That time was just taken — please pick another slot.";
           errorEl.hidden = false;
-          clearSelection();
+          /* Reset the slot choice but keep the form (and this error) visible —
+             clearSelection() would hide the form and swallow the message. */
+          selectedSlot = null;
+          summaryEl.hidden = true;
+          submitBtn.disabled = true;
           loadSlots(selectedDate);
+          errorEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
         } else if (res.status === 429) {
           errorEl.textContent = "Too many booking attempts — please try again later.";
           errorEl.hidden = false;
