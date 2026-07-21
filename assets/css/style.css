@@ -1167,6 +1167,7 @@ img, svg { display: block; max-width: 100%; }
   color: #14100A;
   border-color: var(--accent);
   font-weight: 600;
+  border-radius: 12px; /* rounded rectangle, not the sharp default */
 }
 #download-answer:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
 /* answer grid: scroll long results instead of swallowing the page */

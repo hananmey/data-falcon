@@ -12,7 +12,7 @@
   var API_BASE =
     location.hostname === "localhost" || location.hostname === "127.0.0.1"
       ? "http://localhost:8081"
-      : "https://arcadedb-agent-27294773149.us-central1.run.app";
+      : "https://arcadedb-agent-md6lnz32wq-uc.a.run.app";
 
   var questionEl = document.getElementById("ask-question");
   var submitBtn = document.getElementById("ask-submit");
