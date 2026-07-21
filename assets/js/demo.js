@@ -28,7 +28,7 @@
     agent: [
       "Which currency moves the most money?",
       "Find the longest laundering cycle — money returning to its origin",
-      "Top fan-in collection points among flagged transactions",
+      "All fan-in collection points among flagged transactions",
       "Show a scatter-gather pattern: one source, many mules, one collector",
       "Which payment formats are most common in laundering?",
       "all fraud data",
@@ -41,13 +41,30 @@
       "Total transaction volume per day",
     ],
   };
-  var TAB_NOTE = {
-    agent: "Detected laundering patterns & findings (graph database).",
-    clickhouse: "Analytics over the full 6-million-transaction dataset (ClickHouse).",
+  /* full name per payment-format code (mirrors the server's FORMAT_NAME) */
+  var FORMAT_NAME = {
+    "ACH": "Automated Clearing House",
+    "Cheque": "Paper Check",
+    "Credit Card": "Card Payment",
+    "Cash": "Cash Payment",
+    "Wire": "Wire Transfer",
+    "Bitcoin": "Cryptocurrency Transfer",
+    "Reinvestment": "Earnings Reinvestment",
   };
+
   var currentSource = "agent";
   var suggestionsEl = document.getElementById("ask-suggestions");
-  var tabNoteEl = document.getElementById("ask-tab-note");
+
+  /* textarea: Enter submits, Shift+Enter inserts a newline */
+  if (questionEl) {
+    questionEl.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        var form = document.getElementById("ask-form");
+        if (form) form.requestSubmit ? form.requestSubmit() : form.submit();
+      }
+    });
+  }
 
   function renderSuggestions() {
     if (!suggestionsEl) return;
@@ -66,6 +83,15 @@
   }
   renderSuggestions();
 
+  /* clicking a tab's db logo opens that database's home page in a new tab
+     (and doesn't switch the source tab) */
+  document.querySelectorAll(".ask-tab-logo[data-home]").forEach(function (logo) {
+    logo.addEventListener("click", function (e) {
+      e.stopPropagation();
+      window.open(logo.getAttribute("data-home"), "_blank", "noopener");
+    });
+  });
+
   document.querySelectorAll(".ask-tab").forEach(function (tab) {
     tab.addEventListener("click", function () {
       currentSource = tab.getAttribute("data-source");
@@ -74,9 +100,6 @@
         t.classList.toggle("is-active", on);
         t.setAttribute("aria-selected", on ? "true" : "false");
       });
-      if (tabNoteEl) tabNoteEl.textContent = TAB_NOTE[currentSource];
-      if (submitBtn) submitBtn.textContent =
-        currentSource === "clickhouse" ? "Ask the 6M database" : "Ask the agent";
       renderSuggestions();
     });
   });
@@ -177,7 +200,7 @@
     }
     var meta = document.createElement("span");
     meta.className = "graph-case-meta";
-    meta.textContent = c.n_accounts + " acct · " + c.n_tx + " tx · " + fmtAmt(c.volume);
+    meta.textContent = c.n_accounts + " acct · " + c.n_tx + " tx";
     head.appendChild(tag);
     head.appendChild(meta);
     panel.appendChild(head);
@@ -344,18 +367,17 @@
     function clampY(v) { return Math.max(10, Math.min(CELL_H - 10, v)); }
 
     function nodeTip(n) {
-      /* answer graphs ("askN") skip the case reference — it's noise there */
-      var isAsk = String(c.case_id).indexOf("ask") === 0;
+      var r = role(n);
       return "<strong>" + (n.bank_name || "Account") + "</strong>" +
         (n.is_start ? " · <span class=\"tt-laundering\">START — round-trip origin</span>" : "") +
-        "<br>account " + (n.acct_num || n.acct_id) + " · bank " + n.bank + "<br>" +
-        role(n) + (isAsk ? "" : " · case " + c.case_id + " (" + c.pattern + ")");
+        "<br>account " + (n.acct_num || n.acct_id) + " · bank " + n.bank +
+        (r === "pass-through" ? "" : "<br>" + r);
     }
     function edgeTip(e) {
       var converted = e.currency_received && (e.currency_received !== e.currency ||
         (e.amount_received && e.amount_received !== e.amount));
       return "<strong>Deposit</strong> · " + fmtAmt(e.amount) + " " + e.currency +
-        (e.format ? " · " + e.format : "") +
+        (e.format ? " · " + (FORMAT_NAME[e.format] || e.format) : "") +
         (converted
           ? "<br>received " + fmtAmt(e.amount_received) + " " + e.currency_received
           : "") +
@@ -608,7 +630,7 @@
         src: e.src, dst: e.dst,
         amount: e.amount || 0, currency: e.currency || "",
         amount_received: e.amount || 0, currency_received: e.currency || "",
-        format: "", ts: e.ts || "",
+        format: e.format || "", ts: e.ts || "",
         is_laundering: e.is_laundering === 0 ? 0 : 1,
       };
     });
@@ -626,7 +648,9 @@
   }
 
   if (casesRoot) {
-    fetch(API_BASE + "/demo-graph")
+    /* the 2 demo scenarios ship as a static file — instant, no backend
+       dependency; regenerate with: curl <agent>/demo-graph > assets/data/demo-graph.json */
+    fetch("assets/data/demo-graph.json")
       .then(function (r) {
         if (!r.ok) throw new Error("demo-graph " + r.status);
         return r.json();
@@ -648,6 +672,7 @@
   /* per-answer download: the results THIS query returned (all rows, e.g.
      every edge of a cycle). Built client-side from the answer grid. */
   var dlAnswer = document.getElementById("download-answer");
+
   function csvCell(v) {
     var s = String(v == null ? "" : v);
     return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -732,7 +757,14 @@
           if (demoCases) demoCases.hidden = true;
           summaryEl.textContent = res.data.summary || "";
           renderGrid(res.data.columns, res.data.rows || []);
-          setAnswerDownload(res.data.columns, res.data.rows || [], res.data.path || {});
+          /* the download reads the query's FULL logged results back from the
+             server (ClickHouse ask_results) -- the grid only shows a sample */
+          if (dlAnswer && res.data.query_uuid) {
+            dlAnswer.href = API_BASE + "/results/" + res.data.query_uuid + ".csv";
+            dlAnswer.removeAttribute("download"); /* server sets the filename */
+          } else {
+            setAnswerDownload(res.data.columns, res.data.rows || [], res.data.path || {});
+          }
           renderAnswerGraph(res.data.graph_nodes || [], res.data.graph_edges || [],
             res.data.banks || {}, res.data.pattern || "");
           resultEl.hidden = false;

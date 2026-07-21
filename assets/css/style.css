@@ -1055,6 +1055,9 @@ img, svg { display: block; max-width: 100%; }
   border-radius: var(--radius);
   overflow: hidden;
 }
+/* answer graphs (sample flow) sit alone under the grid — keep them compact,
+   about the size of one demo-case panel instead of full content width */
+#ask-graph .graph-case { max-width: 580px; }
 .graph-case-head {
   display: flex;
   align-items: baseline;
@@ -1138,6 +1141,7 @@ img, svg { display: block; max-width: 100%; }
   cursor: pointer;
   margin-bottom: -1px;
 }
+.ask-tab-logo { cursor: pointer; }
 .ask-tab-logo {
   height: 30px;
   width: 30px;
