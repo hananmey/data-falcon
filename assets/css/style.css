@@ -928,3 +928,251 @@ img, svg { display: block; max-width: 100%; }
 
   .flight-stages { grid-template-columns: 1fr; }
 }
+
+/* Live demo (demo.html): example-question chips + answer grid */
+.ask-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+.ask-suggestions .slot-btn { font-size: 0.82rem; padding: 0.5em 0.9em; }
+#ask-summary { color: var(--ink-muted); margin: 1.2rem 0 0.4rem; }
+#ask-result .post-table-wrap { margin-top: 0.6em; }
+.demo-schema { margin: 1.8rem 0 2.4rem; }
+.demo-schema .eyebrow { margin: 1.8rem 0 0.6rem; }
+.demo-schema .eyebrow:first-child { margin-top: 0; }
+.demo-schema .post-table-wrap { margin: 0.4em 0 1em; }
+.demo-schema code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-inset);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: 0.1em 0.35em;
+}
+
+/* Network graph (demo.html): 100-account laundering cluster */
+.graph-panel {
+  position: relative;
+  background: var(--bg-inset);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 0.9rem;
+}
+.graph-panel svg { display: block; width: 100%; height: auto; }
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 1rem 0 0.2rem;
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  color: var(--ink-muted);
+}
+.legend-item { display: inline-flex; align-items: center; gap: 0.5em; }
+.legend-line {
+  display: inline-block;
+  width: 22px;
+  border-top: 2px solid var(--structural);
+}
+.legend-line.legend-laundering { border-top-color: #E06C6C; }
+.legend-node {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--structural);
+}
+.graph-edge { stroke: var(--structural); stroke-opacity: 0.5; stroke-width: 1.4; }
+.graph-edge.is-laundering { stroke: #E06C6C; stroke-opacity: 0.85; stroke-width: 2; }
+.graph-edge.is-hot, .graph-edge.is-laundering.is-hot { stroke: var(--accent); stroke-opacity: 1; }
+.graph-edge-hit { stroke: transparent; stroke-width: 12; cursor: pointer; }
+.graph-edge-label {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  fill: #7A8299;
+  paint-order: stroke;
+  stroke: var(--bg-inset);
+  stroke-width: 2px;
+}
+.graph-edge-label.is-laundering { fill: #E08585; }
+.graph-node circle { fill: var(--bg-elevated); stroke: var(--structural); stroke-width: 1.5; cursor: pointer; }
+.graph-node.is-hot circle { stroke: var(--accent); stroke-width: 2; }
+.graph-node .bank-glyph { fill: var(--ink-muted); pointer-events: none; }
+.graph-node text {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  fill: #8B93A7;
+  text-anchor: middle;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--bg-inset);
+  stroke-width: 2px;
+}
+.graph-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.55em 0.75em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--ink);
+  max-width: 250px;
+  z-index: 5;
+}
+.graph-tooltip .tt-laundering { color: #E08585; }
+.graph-status { margin-top: 0.6rem; }
+.graph-chain-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-faint);
+}
+
+/* Laundering-pattern case panels (demo.html): one panel per Scenario */
+.legend-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+}
+#graph-cases {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  margin-top: 0.9rem;
+}
+@media (max-width: 720px) { #graph-cases { grid-template-columns: 1fr; } }
+.graph-case {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.graph-case-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--line-soft);
+}
+.graph-case-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.graph-case-tag em { font-style: normal; color: var(--ink-faint); }
+.graph-case-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.graph-case-notes {
+  margin: 0;
+  padding: 0.55rem 0.9rem 0.7rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--line-soft);
+}
+.graph-case svg { display: block; width: 100%; height: auto; background: var(--bg-inset); touch-action: none; }
+.graph-case .graph-node-c { cursor: grab; stroke: var(--bg-inset); stroke-width: 2; }
+.graph-case .graph-node-c:active { cursor: grabbing; }
+.graph-case .graph-node-c.is-hot { stroke: var(--ink); }
+.graph-case .graph-edge2 { fill: none; stroke: #E06C6C; opacity: 0.75; pointer-events: none; }
+.graph-case .graph-edge2-head { fill: #E06C6C; opacity: 0.85; pointer-events: none; }
+.graph-case g.is-hot .graph-edge2 { stroke: var(--accent); opacity: 1; }
+.graph-case g.is-hot .graph-edge2-head { fill: var(--accent); opacity: 1; }
+.graph-case g.ctx .graph-edge2 { stroke: #ECEFF4; opacity: 0.55; }
+.graph-case g.ctx .graph-edge2-head { fill: #ECEFF4; opacity: 0.65; }
+.graph-case .graph-edge2-hit { stroke: transparent; stroke-width: 14; fill: none; cursor: grab; }
+.graph-case .graph-edge2-label {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+  pointer-events: none;
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: var(--bg-inset);
+  stroke-width: 2.5px;
+}
+.graph-case g.ctx .graph-edge2-label { fill: var(--ink-muted); }
+.graph-case .graph-start-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  fill: var(--accent);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--bg-inset);
+  stroke-width: 3px;
+}
+.graph-tooltip-fixed { position: fixed; }
+#demo-cases[hidden] { display: none; }
+
+.ask-tabs { display: flex; gap: 0.4rem; border-bottom: 1px solid var(--line); margin-bottom: 0.6rem; }
+.ask-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-muted);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.ask-tab-logo {
+  height: 30px;
+  width: 30px;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
+  padding: 2px;
+  box-sizing: content-box;
+}
+.ask-tab:hover { color: var(--ink); }
+.ask-tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.ask-tab-note {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+.answer-download { margin: 0 0 0.9rem; }
+.answer-download a { display: inline-block; text-decoration: none; }
+#download-answer {
+  background: var(--accent);
+  color: #14100A;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+#download-answer:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+/* answer grid: scroll long results instead of swallowing the page */
+#ask-result .post-table-wrap {
+  max-height: 340px;
+  overflow-y: auto;
+}
+#ask-result .post-table-wrap th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-elevated);
+  z-index: 1;
+}

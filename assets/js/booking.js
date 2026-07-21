@@ -17,8 +17,9 @@
       : "https://booking-service-27294773149.us-central1.run.app";
 
   var BUSINESS_TZ = "Asia/Jerusalem";
-  var BUSINESS_DAYS = 8;
+  var BUSINESS_DAYS = 8; /* days with availability to offer */
   var MIN_LEAD_DAYS = 2; /* earliest bookable day; mirrors the service's MIN_NOTICE_MINUTES */
+  var HORIZON_DAYS = 30; /* how far ahead to look; mirrors the service's BOOKING_HORIZON_DAYS */
   var WORK_DAYS = [0, 1, 2, 3, 4]; /* Sun–Thu, JS getUTCDay numbering */
 
   var slotGrid = document.getElementById("slot-grid");
@@ -50,14 +51,12 @@
     return d.toISOString().slice(0, 10);
   }
 
-  function nextBusinessDays(count) {
+  function businessDaysWithinHorizon() {
     var days = [];
-    var cursor = new Date(toUtcNoon(todayInBusinessTz()).getTime() + MIN_LEAD_DAYS * 24 * 60 * 60 * 1000);
-    while (days.length < count) {
-      if (WORK_DAYS.indexOf(cursor.getUTCDay()) !== -1) {
-        days.push(isoDate(cursor));
-      }
-      cursor = new Date(cursor.getTime() + 24 * 60 * 60 * 1000);
+    var start = toUtcNoon(todayInBusinessTz());
+    for (var i = MIN_LEAD_DAYS; i <= HORIZON_DAYS; i++) {
+      var d = new Date(start.getTime() + i * 24 * 60 * 60 * 1000);
+      if (WORK_DAYS.indexOf(d.getUTCDay()) !== -1) days.push(isoDate(d));
     }
     return days;
   }
@@ -90,19 +89,70 @@
     form.hidden = true;
   }
 
-  function renderDays() {
-    nextBusinessDays(BUSINESS_DAYS).forEach(function (dateStr) {
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "day-btn";
-      btn.dataset.date = dateStr;
-      btn.setAttribute("aria-pressed", "false");
-      btn.innerHTML =
-        '<span class="day-dow">' + fmtDay(dateStr, { weekday: "short" }) + "</span>" +
-        '<span class="day-date">' + fmtDay(dateStr, { day: "numeric", month: "short" }) + "</span>";
-      btn.addEventListener("click", function () { selectDay(dateStr); });
-      dayGrid.appendChild(btn);
+  function addDayButton(dateStr) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "day-btn";
+    btn.dataset.date = dateStr;
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML =
+      '<span class="day-dow">' + fmtDay(dateStr, { weekday: "short" }) + "</span>" +
+      '<span class="day-date">' + fmtDay(dateStr, { day: "numeric", month: "short" }) + "</span>";
+    btn.addEventListener("click", function () { selectDay(dateStr); });
+    dayGrid.appendChild(btn);
+  }
+
+  function fetchSlots(dateStr) {
+    return fetch(API_BASE + "/slots?date=" + dateStr).then(function (r) {
+      if (!r.ok) throw new Error("slots " + r.status);
+      return r.json();
     });
+  }
+
+  /* Only offer days that actually have free times: probe candidate days in
+     chronological batches and keep going further out until BUSINESS_DAYS
+     days with availability are shown (or the booking horizon runs out). */
+  function renderDays() {
+    var candidates = businessDaysWithinHorizon();
+    var BATCH = 8;
+    var shown = 0;
+
+    setStatus("Loading available days…", true);
+
+    function probeBatch(startIdx) {
+      if (startIdx >= candidates.length || shown >= BUSINESS_DAYS) {
+        finish();
+        return;
+      }
+      var batch = candidates.slice(startIdx, startIdx + BATCH);
+      Promise.all(
+        batch.map(function (dateStr) {
+          return fetchSlots(dateStr)
+            .then(function (data) { return { date: dateStr, free: data.slots.length > 0 }; })
+            /* On error keep the day visible — clicking it retries and surfaces the problem. */
+            .catch(function () { return { date: dateStr, free: true }; });
+        })
+      ).then(function (results) {
+        results.forEach(function (res) {
+          if (res.free && shown < BUSINESS_DAYS) {
+            addDayButton(res.date);
+            shown++;
+          }
+        });
+        probeBatch(startIdx + BATCH);
+      });
+    }
+
+    function finish() {
+      if (selectedDate) return; /* user already picked a day; leave its status alone */
+      if (shown) {
+        setStatus("Select a day to see available times.");
+      } else {
+        setStatus("No free times in the coming weeks — please reach out via the contact page.");
+      }
+    }
+
+    probeBatch(0);
   }
 
   function markSelected(grid, btnClass, value, dataKey) {
@@ -124,16 +174,15 @@
     slotGrid.innerHTML = "";
     setStatus("Loading times…", true);
 
-    fetch(API_BASE + "/slots?date=" + dateStr)
-      .then(function (r) {
-        if (!r.ok) throw new Error("slots " + r.status);
-        return r.json();
-      })
+    fetchSlots(dateStr)
       .then(function (data) {
         if (selectedDate !== dateStr) return; /* stale response */
         slotMinutes = data.slot_minutes || slotMinutes;
         if (!data.slots.length) {
-          setStatus("No free times on " + fmtDay(dateStr, { weekday: "long", day: "numeric", month: "long" }) + " — try another day.");
+          /* Day filled up since it was offered — drop it from the grid. */
+          var dayBtn = dayGrid.querySelector('.day-btn[data-date="' + dateStr + '"]');
+          if (dayBtn) dayBtn.remove();
+          setStatus(fmtDay(dateStr, { weekday: "long", day: "numeric", month: "long" }) + " just filled up — please pick another day.");
           return;
         }
         setStatus("");

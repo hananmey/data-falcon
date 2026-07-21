@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a demo — Data Falcon</title>
+<meta name="description" content="Request a live demo from Data Falcon — see our data platforms and AI agent work in action.">
+<link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/style.css?v=20260721d">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="brand" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGrad" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="site-nav" id="site-nav" aria-label="Primary">
+      <a href="index.html#approach">Approach</a>
+      <a href="about.html">Team</a>
+      <a href="posts.html">Posts</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a class="nav-book" href="book.html">Free consulting meeting</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- LIVE DEMO -->
+  <section class="section" id="live-demo">
+    <div class="wrap">
+      <div class="contact-intro reveal">
+        <p class="eyebrow">Live demo</p>
+        <h2>Ask our agent about real graph data.</h2>
+        <p>This is a live AI agent connected to an ArcadeDB graph database through
+        MCP. It writes and runs the queries itself — you just ask in plain language.</p>
+      </div>
+
+      <div class="reveal" id="demo-cases">
+        <div class="graph-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#4D96F0"></span>Origin</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#B8861E"></span>Pass-through</span>
+          <span class="legend-item"><span class="legend-dot" style="background:#C46BD4"></span>Destination</span>
+          <span class="legend-item"><span class="legend-line legend-laundering"></span>Flagged laundering flow</span>
+        </div>
+        <div id="graph-cases"></div>
+        <p class="graph-status booking-status is-loading" id="graph-status" role="status">Loading the graph…</p>
+        <div class="graph-tooltip graph-tooltip-fixed" id="graph-tooltip" hidden></div>
+      </div>
+
+      <div class="reveal">
+        <div class="ask-tabs" role="tablist" aria-label="Data source">
+          <button type="button" class="ask-tab is-active" data-source="agent" role="tab" aria-selected="true">
+            <img class="ask-tab-logo" src="assets/img/tech/arcadedb-icon.png" alt="ArcadeDB">Ask the agent
+          </button>
+          <button type="button" class="ask-tab" data-source="clickhouse" role="tab" aria-selected="false">
+            <img class="ask-tab-logo" src="assets/img/tech/clickhouse-icon.png" alt="ClickHouse">Ask the 6M database
+          </button>
+        </div>
+        <p class="ask-tab-note" id="ask-tab-note">Detected laundering patterns &amp; findings (graph database).</p>
+
+        <div class="ask-suggestions" id="ask-suggestions" aria-label="Example questions"></div>
+
+        <form class="contact-form" id="ask-form" novalidate>
+          <div class="field">
+            <label for="ask-question">Your question<span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="ask-question" name="question" maxlength="500" required
+                   placeholder="e.g. Which currency moves the most money?">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit" id="ask-submit">Ask the agent</button>
+          <p class="booking-status" id="ask-status" role="status"></p>
+          <p class="form-error" id="ask-error" hidden></p>
+        </form>
+
+        <div id="ask-result" hidden>
+          <p id="ask-summary"></p>
+          <p class="answer-download">
+            <a id="download-answer" class="slot-btn" href="#" download="query_results.csv">⭳ Download query results (CSV)</a>
+          </p>
+          <div class="post-table-wrap">
+            <table id="ask-table"></table>
+          </div>
+          <div id="ask-graph"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="section" id="demo">
+    <div class="wrap contact-grid">
+      <div class="contact-intro reveal">
+        <p class="eyebrow">Guided demo</p>
+        <h2>Want one over your own data?</h2>
+        <p>Tell us what you'd like to see — a data platform, pipeline automation, or an AI agent over your own data — and we'll set up a live session tailored to it.</p>
+      </div>
+
+      <div class="contact-stack reveal">
+        <form class="contact-form" id="demo-form" action="https://formspree.io/f/mkodnzrr" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Demo request — Data Falcon site">
+        <input type="hidden" name="form_type" value="demo">
+        <div class="field">
+          <label for="name">Name<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email<span class="req" aria-hidden="true">*</span></label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="message">What would you like to see?</label>
+          <textarea id="message" name="message" rows="5" placeholder="e.g. graph analytics over transactions, a CV-intake agent, ClickHouse at scale…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Request a demo</button>
+        <p class="form-note" id="form-note">We'll get back to you within one business day to schedule.</p>
+        <p class="form-success" id="form-success" hidden>Thank you! Your demo request has been sent — we'll be in touch to schedule.</p>
+        <p class="form-error" id="form-error" hidden>Something went wrong sending your request. Please try again, or email us directly.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-row">
+    <a class="brand brand-footer" href="index.html" aria-label="Data Falcon home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M4 23 L14 8 L16.5 14 L27 3" fill="none" stroke="url(#markGradFooter)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="markGradFooter" x1="4" y1="23" x2="27" y2="3" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#C98A2C"/>
+            <stop offset="1" stop-color="#F3C868"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="brand-word">Data Falcon</span>
+    </a>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html#approach">Approach</a>
+      <a href="about.html">Team</a>
+      <a href="posts.html">Posts</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+  <div class="wrap footer-meta">
+    <span>© <span id="year">2026</span> Data Falcon. All rights reserved.</span>
+    <span class="footer-coord">EST. 2026 · IND. NO. 04</span>
+  </div>
+</footer>
+
+<script src="assets/js/main.js?v=20260718"></script>
+<script src="assets/js/demo.js?v=20260721c"></script>
+</body>
+</html>

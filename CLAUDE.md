@@ -39,6 +39,15 @@ assets/img/favicon.svg   brand mark (also inlined in index.html header/footer)
 
 ## Content notes
 
+- `demo.html` has two sections: a **live demo** (schema blurb + question box +
+  answer grid) backed by the arcadedb-agent service's public `POST /ask`
+  endpoint via `assets/js/demo.js` (same API_BASE localhost/Cloud Run pattern
+  as `booking.js`; the Cloud Run URL is a placeholder until that service is
+  deployed), and a **guided demo request form** (Formspree, same endpoint as
+  contact but with hidden `_subject`/`form_type=demo` fields). The grid reuses
+  `.post-table-wrap` table styles; chips/status reuse `.slot-btn` /
+  `.booking-status`.
+
 - Contact form has no backend. `main.js` intercepts submit and opens a
   pre-filled `mailto:` to `hello@data-falcon.com`. If a real backend
   (Formspree, a serverless function, etc.) is added later, replace that

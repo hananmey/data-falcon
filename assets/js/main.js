@@ -54,13 +54,14 @@
     revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /* Contact form -> Formspree (silent submit, no email client) */
-  var form = document.getElementById("contact-form");
+  /* Contact / demo form -> Formspree (silent submit, no email client) */
+  var form = document.getElementById("contact-form") || document.getElementById("demo-form");
   if (form) {
     var formSuccess = document.getElementById("form-success");
     var formNote = document.getElementById("form-note");
     var formError = document.getElementById("form-error");
     var formSubmitBtn = form.querySelector(".form-submit");
+    var formSubmitLabel = formSubmitBtn.textContent;
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -96,7 +97,7 @@
         })
         .finally(function () {
           formSubmitBtn.disabled = false;
-          formSubmitBtn.textContent = "Send message";
+          formSubmitBtn.textContent = formSubmitLabel;
         });
     });
   }
