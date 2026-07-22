@@ -11,10 +11,9 @@
 
   /* Local dev: run the service locally (uvicorn main:app --port 8080)
      with ALLOWED_ORIGINS including http://localhost:8000. */
-  var API_BASE =
-    location.hostname === "localhost" || location.hostname === "127.0.0.1"
-      ? "http://localhost:8080"
-      : "https://booking-service-27294773149.us-central1.run.app";
+  /* localhost uses the deployed service too -- local Calendar auth needs an
+     impersonated ADC that is rarely set up; the Cloud Run service just works */
+  var API_BASE = "https://booking-service-27294773149.us-central1.run.app";
 
   var BUSINESS_TZ = "Asia/Jerusalem";
   var BUSINESS_DAYS = 8; /* days with availability to offer */
