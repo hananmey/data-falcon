@@ -83,15 +83,6 @@
   }
   renderSuggestions();
 
-  /* clicking a tab's db logo opens that database's home page in a new tab
-     (and doesn't switch the source tab) */
-  document.querySelectorAll(".ask-tab-logo[data-home]").forEach(function (logo) {
-    logo.addEventListener("click", function (e) {
-      e.stopPropagation();
-      window.open(logo.getAttribute("data-home"), "_blank", "noopener");
-    });
-  });
-
   document.querySelectorAll(".ask-tab").forEach(function (tab) {
     tab.addEventListener("click", function () {
       currentSource = tab.getAttribute("data-source");
@@ -366,6 +357,11 @@
     function clampX(v) { return Math.max(10, Math.min(CELL_W - 10, v)); }
     function clampY(v) { return Math.max(10, Math.min(CELL_H - 10, v)); }
 
+    /* '<code>_<acct>' composite -> human label (never show the raw composite) */
+    function acctLabel(id) {
+      var parts = (id || "").split("_");
+      return parts.length > 1 ? "account " + parts[1] + " (bank " + parts[0] + ")" : id;
+    }
     function nodeTip(n) {
       var r = role(n);
       return "<strong>" + (n.bank_name || "Account") + "</strong>" +
@@ -385,7 +381,7 @@
           ? "<br><span class=\"tt-laundering\">⚑ flagged as laundering</span>"
           : "<br>ordinary transfer") +
         (e.src_bank_name || e.dst_bank_name
-          ? "<br>" + (e.src_bank_name || e.src) + " → " + (e.dst_bank_name || e.dst)
+          ? "<br>" + (e.src_bank_name || acctLabel(e.src)) + " → " + (e.dst_bank_name || acctLabel(e.dst))
           : "") +
         "<br>" + e.src + " → " + e.dst + "<br>" + (e.ts || "");
     }
@@ -625,9 +621,13 @@
         x: n.x, y: n.y, is_context: 0, is_start: n.is_start || 0,
       };
     });
+    var bankNameById = {};
+    nodes.forEach(function (n) { bankNameById[n.acct_id] = n.bank_name; });
     var edges = gedges.map(function (e) {
       return {
         src: e.src, dst: e.dst,
+        src_bank_name: bankNameById[e.src] || "",
+        dst_bank_name: bankNameById[e.dst] || "",
         amount: e.amount || 0, currency: e.currency || "",
         amount_received: e.amount || 0, currency_received: e.currency || "",
         format: e.format || "", ts: e.ts || "",

@@ -6,7 +6,7 @@
 <title>Request a demo — Data Falcon</title>
 <meta name="description" content="Request a live demo from Data Falcon — see our data platforms and AI agent work in action.">
 <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
-<link rel="stylesheet" href="assets/css/style.css?v=20260722a">
+<link rel="stylesheet" href="assets/css/style.css?v=20260722c">
 </head>
 <body>
 
@@ -72,12 +72,10 @@
       <div class="reveal">
         <div class="ask-tabs" role="tablist" aria-label="Data source">
           <button type="button" class="ask-tab is-active" data-source="agent" role="tab" aria-selected="true">
-            <img class="ask-tab-logo" src="assets/img/tech/arcadedb-icon.png" alt="ArcadeDB"
-                 data-home="https://arcadedb.com" title="arcadedb.com">Ask the agent
+            <img class="ask-tab-logo" src="assets/img/tech/arcadedb.png" alt="ArcadeDB">
           </button>
           <button type="button" class="ask-tab" data-source="clickhouse" role="tab" aria-selected="false">
-            <img class="ask-tab-logo" src="assets/img/tech/clickhouse-icon.png" alt="ClickHouse"
-                 data-home="https://clickhouse.com" title="clickhouse.com">Ask the agent
+            <img class="ask-tab-logo" src="assets/img/tech/clickhouse.png" alt="ClickHouse">
           </button>
         </div>
 
@@ -104,6 +102,14 @@
           </div>
           <div id="ask-graph"></div>
         </div>
+      </div>
+
+      <div class="reveal demo-facts" aria-label="About this demo">
+        <ul>
+          <li>The data comes from the <a href="https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml" target="_blank" rel="noopener">IBM Transactions for Anti-Money Laundering (AML)</a> synthetic dataset.</li>
+          <li>The full raw dataset holds <strong>6,924,049 transactions</strong> across <strong>705,903 accounts</strong>.</li>
+          <li>Both databases — ArcadeDB and ClickHouse — run as services on Kubernetes (Google Kubernetes Engine).</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -141,6 +147,6 @@
 </footer>
 
 <script src="assets/js/main.js?v=20260718"></script>
-<script src="assets/js/demo.js?v=20260722a"></script>
+<script src="assets/js/demo.js?v=20260722d"></script>
 </body>
 </html>
