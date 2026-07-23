@@ -26,7 +26,6 @@
      questions only (aggregations over the full dataset) */
   var SUGGESTIONS = {
     agent: [
-      "Which currency moves the most money?",
       "Find the longest laundering cycle — money returning to its origin",
       "All fan-in collection points among flagged transactions",
       "Show a scatter-gather pattern: one source, many mules, one collector",
@@ -724,6 +723,60 @@
   }
   loadStats();
 
+  /* -- answer time breakdown bar: LLM+agent / query / rendering ---------- */
+  var timingEl = document.getElementById("ask-timing");
+  function fmtDur(ms) {
+    return ms >= 1000 ? (ms / 1000).toFixed(1) + "s" : Math.round(ms) + "ms";
+  }
+  function renderTiming(agentMs, queryMs, renderMs) {
+    if (!timingEl) return;
+    var total = agentMs + queryMs + renderMs;
+    if (!total || agentMs + queryMs <= 0) { timingEl.hidden = true; return; }
+    var parts = [
+      { label: "LLM + Agent", ms: agentMs, cls: "tm-agent" },
+      { label: "Query", ms: queryMs, cls: "tm-query" },
+      { label: "Rendering", ms: renderMs, cls: "tm-render" },
+    ];
+    var bar = "", legend = [];
+    parts.forEach(function (p) {
+      var pct = (p.ms / total) * 100;
+      bar += '<span class="timing-seg ' + p.cls + '" style="width:' +
+        Math.max(pct, 0.6).toFixed(2) + '%" title="' + p.label + " · " + fmtDur(p.ms) + '"></span>';
+      legend.push('<span class="timing-key"><span class="timing-dot ' + p.cls +
+        '"></span>' + p.label + " " + (pct < 1 ? "<1" : Math.round(pct)) + "%</span>");
+    });
+    timingEl.innerHTML = '<div class="timing-bar">' + bar + "</div>" +
+      '<p class="timing-legend">' + legend.join(" · ") +
+      ' <span class="timing-total">· total ' + fmtDur(total) + "</span></p>";
+    timingEl.hidden = false;
+  }
+
+  /* live progress bar while the LLM + query run (final split comes after) */
+  var progressEl = document.getElementById("ask-progress");
+  var progressTimer = null;
+  function startProgress() {
+    if (!progressEl) return;
+    progressEl.innerHTML =
+      '<div class="timing-bar"><span class="timing-seg tm-progress" style="width:0%"></span></div>' +
+      '<p class="timing-legend"><span class="timing-key">' +
+      '<span class="timing-dot tm-progress"></span>LLM + Agent &amp; query running… ' +
+      '<span class="js-elapsed">0s</span></span></p>';
+    progressEl.hidden = false;
+    var seg = progressEl.querySelector(".timing-seg");
+    var lbl = progressEl.querySelector(".js-elapsed");
+    var t0 = performance.now();
+    progressTimer = setInterval(function () {
+      var s = (performance.now() - t0) / 1000;
+      /* eases toward 95% -- most answers land within ~a minute */
+      seg.style.width = Math.min(95, 100 * (1 - Math.exp(-s / 25))).toFixed(1) + "%";
+      lbl.textContent = s.toFixed(0) + "s";
+    }, 250);
+  }
+  function stopProgress() {
+    if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+    if (progressEl) progressEl.hidden = true;
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -736,8 +789,10 @@
 
     errorEl.hidden = true;
     resultEl.hidden = true;
+    if (timingEl) timingEl.hidden = true;
     submitBtn.disabled = true;
     setStatus("The agent is querying the graph… this can take up to a minute.", true);
+    startProgress();
 
     fetch(API_BASE + "/ask", {
       method: "POST",
@@ -752,9 +807,16 @@
       .then(function (res) {
         setStatus("");
         if (res.ok && res.data && res.data.columns) {
-          /* once an answer renders, the intro sample-case panels make way */
+          var renderStart = performance.now();
+          /* once an answer renders, the intro sample-case panels make way --
+             collapsing softly instead of vanishing in one frame */
           var demoCases = document.getElementById("demo-cases");
-          if (demoCases) demoCases.hidden = true;
+          var collapsing = false;
+          if (demoCases && !demoCases.hidden) {
+            collapsing = true;
+            demoCases.classList.add("is-collapsing");
+            setTimeout(function () { demoCases.hidden = true; }, 800);
+          }
           summaryEl.textContent = res.data.summary || "";
           renderGrid(res.data.columns, res.data.rows || []);
           /* the download reads the query's FULL logged results back from the
@@ -768,7 +830,17 @@
           renderAnswerGraph(res.data.graph_nodes || [], res.data.graph_edges || [],
             res.data.banks || {}, res.data.pattern || "");
           resultEl.hidden = false;
-          resultEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          /* time breakdown bar: server-reported agent + query time, plus the
+             rendering time measured here (through the next painted frame) */
+          requestAnimationFrame(function () {
+            renderTiming(res.data.agent_ms || 0, res.data.query_ms || 0,
+              Math.round(performance.now() - renderStart));
+          });
+          /* scroll only after the collapse settles, and gently -- the
+             timing bar lands at the top of the viewport, results below */
+          setTimeout(function () {
+            (timingEl || resultEl).scrollIntoView({ behavior: "smooth", block: "start" });
+          }, collapsing ? 850 : 150);
         } else if (res.status === 429) {
           errorEl.textContent = "Too many questions from this address — please try again in a few minutes.";
           errorEl.hidden = false;
@@ -783,6 +855,7 @@
         errorEl.hidden = false;
       })
       .finally(function () {
+        stopProgress();
         submitBtn.disabled = false;
       });
   });

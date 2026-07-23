@@ -1191,6 +1191,57 @@ img, svg { display: block; max-width: 100%; }
 .demo-facts a { color: var(--accent); }
 .demo-facts strong { color: var(--ink); font-weight: 600; }
 
+/* roomier rhythm between the demo page's blocks */
+#live-demo .wrap > div + div { margin-top: 3rem; }
+
+/* the intro sample cases collapse softly once an answer renders */
+#demo-cases {
+  overflow: hidden;
+  max-height: 1600px;
+  transition: max-height 0.8s ease, opacity 0.5s ease;
+}
+#demo-cases.is-collapsing { max-height: 0; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  #demo-cases { transition: none; }
+}
+
+/* answer time breakdown: thin stacked bar + mono legend (sits right
+   under the Ask-the-agent form) */
+.ask-timing { margin: 1.2rem 0 0; scroll-margin-top: 84px; /* clear the sticky header */ }
+/* clear air between the bar and the answer text below it */
+#ask-result { margin-top: 2rem; }
+.timing-bar {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.timing-seg { display: block; height: 100%; min-width: 2px; }
+/* moderate, desaturated tones -- no accent yellow in the bar */
+.tm-agent { background: #6E8898; }
+.tm-query { background: #5B8DB8; }
+.tm-render { background: #9C7BA8; }
+.tm-progress { background: #6E8898; transition: width 0.25s linear; }
+.ask-progress { margin: 0.6rem 0 0; }
+.timing-legend {
+  margin: 0.45rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.03em;
+}
+.timing-key { white-space: nowrap; }
+.timing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.35em;
+  vertical-align: baseline;
+}
+.timing-total { color: var(--ink-faint); }
+
 .answer-download { margin: 0 0 0.9rem; }
 .answer-download a { display: inline-block; text-decoration: none; }
 #download-answer {
